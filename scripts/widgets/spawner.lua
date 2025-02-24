@@ -6,6 +6,7 @@ local ImageButton = require "widgets/imagebutton"
 
 local ScrollableList = require "widgets/scrollablelist"
 
+-- C:\Program Files (x86)\Steam\steamapps\workshop\content\322330\3425308137\scripts\widgets\superphonographwidget.lua
 local Spawner = Class(Screen, function(self, inst)
     -- Player instance
     self.inst = inst
@@ -32,6 +33,31 @@ local Spawner = Class(Screen, function(self, inst)
             self:OnClose()
         end, "CLOSE", {130, 40}))
     self.closebutton:SetPosition(0, -170)
+
+    self.checkbox = self.root:AddChild(TEMPLATES.LabelCheckbox(
+        function (elem)
+            elem.checked = not elem.checked
+            if elem.checked then 
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+            end
+            elem:Refresh()
+        end,
+        true,
+        "TEST"
+    ))
+    self.checkbox:SetPosition(0, -200)
+
+
+    self.textentry = self.root:AddChild(TEMPLATES.StandardSingleLineTextEntry(
+        "test",
+        300,
+        30,
+        NEWFONT_OUTLINE,
+        15,
+        "test"
+    ))
+    self.textentry:SetPosition(-50, -250)
+    print(self.textentry.textbox:GetLineEditString())
 
     self:loadElements()
       
@@ -86,6 +112,14 @@ local Spawner = Class(Screen, function(self, inst)
 
 end)
 
+--https://forums.kleientertainment.com/forums/topic/68389-how-do-you-save-client-data-on-servers/
+-- Ah, you want to save persistent data.
+
+-- TheSim:SetPersistentString(String:FilePath, String:Data, Boolean:ShouldCompressData, Function:CallbackOnSuccess)
+
+-- And to retrieve the data..
+
+-- TheSim:GetPersistentString(String:FilePath, Function:CallbackOnFailOrSuccess) 
 
 
 function Spawner:loadElements()
@@ -99,9 +133,15 @@ function Spawner:loadElements()
         widget:SetOnGainFocus(function()
              self.scrollbar:OnWidgetFocus(widget)
         end)
-        -- widget.item = widget:AddChild(self:DestListItem())
-        -- local dest = widget.item
-        -- widget.focus_forward = dest
+        widget.item = widget:AddChild(TEMPLATES.StandardSingleLineTextEntry(
+            "test",
+            240,
+            30,
+            NEWFONT_OUTLINE,
+            30,
+            "test"
+        ))
+
         return widget
     end
     local function apply_userfn(context, widget, name, index)
